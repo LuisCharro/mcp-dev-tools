@@ -48,6 +48,5 @@ coverage/
 .parcel-cache/
 
 # MCP specific
-mcp-dev-tools.log
-chatgpt-coder.log
+mcp-gateway.log
 *.log.bak
