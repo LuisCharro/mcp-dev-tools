@@ -13,7 +13,7 @@ SEARCH_PORT="${SEARCH_PORT:-3334}"
 GIT_PORT="${GIT_PORT:-3335}"
 
 # Start filesystem server
-PORT="$REPO_PORT" "$THIS_DIR/start-http.sh" &> "$THIS_DIR/mcp-dev-tools.log" &
+PORT="$REPO_PORT" "$THIS_DIR/start-http.sh" &> "$THIS_DIR/mcp-gateway.log" &
 FS_PID=$!
 
 # Start search server
@@ -33,4 +33,4 @@ echo "  - repo-search:   http://127.0.0.1:$SEARCH_PORT/  (PID $SEARCH_PID)"
 echo "  - repo-git:      http://127.0.0.1:$GIT_PORT/     (coming soon)"
 echo ""
 echo "Logs:"
-echo "  tail -f $THIS_DIR/mcp-dev-tools.log $THIS_DIR/mcp-search.log"
+echo "  tail -f $THIS_DIR/mcp-gateway.log $THIS_DIR/mcp-search.log"

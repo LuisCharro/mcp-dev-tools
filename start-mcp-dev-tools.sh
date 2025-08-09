@@ -12,12 +12,50 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 # Default configuration
-DEFAULT_REPO="/Users/luis/Repos/PDFExtractorAI"
 DEFAULT_PORT="3333"
 
+# Load .env if present to get REPO_ROOT/PORT defaults
+THIS_DIR="$(cd "$(dirname "$0")" && pwd)"
+if [ -f "$THIS_DIR/.env" ]; then
+  # shellcheck disable=SC2046
+  export $(grep -v '^#' "$THIS_DIR/.env" | xargs -I{} echo {})
+fi
+if [ -f "$THIS_DIR/.env.local" ]; then
+    # shellcheck disable=SC2046
+    export $(grep -v '^#' "$THIS_DIR/.env.local" | xargs -I{} echo {})
+fi
+
 # Allow overrides via environment variables
-REPO_ROOT="${REPO_ROOT:-$DEFAULT_REPO}"
 PORT="${PORT:-$DEFAULT_PORT}"
+
+# First-run prompt for REPO_ROOT if not set
+if [ -z "${REPO_ROOT:-}" ]; then
+    echo "No REPO_ROOT configured. Let's set it up."
+    read -r -p "Enter absolute path to your repository: " INPUT_REPO
+    if [ -z "$INPUT_REPO" ] || [ ! -d "$INPUT_REPO" ]; then
+        echo -e "${RED}❌ Invalid repository path: '$INPUT_REPO'${NC}"
+        echo "Please re-run with a valid path or set REPO_ROOT in .env"
+        exit 1
+    fi
+    REPO_ROOT="$INPUT_REPO"
+    # Persist to .env (create or update)
+    if [ -f "$THIS_DIR/.env.local" ]; then
+        if grep -q '^REPO_ROOT=' "$THIS_DIR/.env.local"; then
+            sed -i '' "s#^REPO_ROOT=.*#REPO_ROOT=$REPO_ROOT#" "$THIS_DIR/.env.local"
+        else
+            printf "\nREPO_ROOT=%s\n" "$REPO_ROOT" >> "$THIS_DIR/.env.local"
+        fi
+    elif [ -f "$THIS_DIR/.env" ]; then
+        if grep -q '^REPO_ROOT=' "$THIS_DIR/.env"; then
+            sed -i '' "s#^REPO_ROOT=.*#REPO_ROOT=$REPO_ROOT#" "$THIS_DIR/.env"
+        else
+            printf "\nREPO_ROOT=%s\n" "$REPO_ROOT" >> "$THIS_DIR/.env"
+        fi
+    else
+        printf "REPO_ROOT=%s\nPORT=%s\n" "$REPO_ROOT" "$PORT" > "$THIS_DIR/.env.local"
+    fi
+    echo -e "${GREEN}Saved REPO_ROOT to $THIS_DIR/.env.local${NC}"
+fi
 
 echo ""
 echo "🤖 MCP Dev Tools Server"
@@ -50,7 +88,7 @@ echo ""
 # Start the server
 echo "Starting server..."
 export REPO_ROOT
-./start-http.sh --port $PORT &> mcp-dev-tools.log &
+./start-http.sh --port $PORT &> mcp-gateway.log &
 SERVER_PID=$!
 
 # Wait a moment for server to start
@@ -66,7 +104,7 @@ if ps -p $SERVER_PID > /dev/null; then
     echo ""
     echo "📊 Server Info:"
     echo "  - PID: $SERVER_PID"
-    echo "  - Logs: tail -f mcp-dev-tools.log"
+    echo "  - Logs: tail -f mcp-gateway.log"
     echo ""
     echo "🛑 To stop the server:"
     echo "  pkill -f 'supergateway.*$PORT'"
@@ -74,6 +112,6 @@ if ps -p $SERVER_PID > /dev/null; then
     echo -e "${GREEN}Ready for coding with AI assistants!${NC}"
 else
     echo -e "${RED}❌ Failed to start server${NC}"
-    echo "Check logs: cat mcp-dev-tools.log"
+    echo "Check logs: cat mcp-gateway.log"
     exit 1
 fi
