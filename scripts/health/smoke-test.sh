@@ -9,6 +9,7 @@
 set -euo pipefail
 
 THIS_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_ROOT="$(cd "$THIS_DIR/../.." && pwd)"
 
 # Colors
 GREEN='\033[0;32m'
@@ -17,13 +18,13 @@ RED='\033[0;31m'
 NC='\033[0m'
 
 # Load env (project then local overrides)
-if [ -f "$THIS_DIR/.env" ]; then
+if [ -f "$PROJECT_ROOT/.env" ]; then
   # shellcheck disable=SC2046
-  export $(grep -v '^#' "$THIS_DIR/.env" | xargs -I{} echo {})
+  export $(grep -v '^#' "$PROJECT_ROOT/.env" | xargs -I{} echo {})
 fi
-if [ -f "$THIS_DIR/.env.local" ]; then
+if [ -f "$PROJECT_ROOT/.env.local" ]; then
   # shellcheck disable=SC2046
-  export $(grep -v '^#' "$THIS_DIR/.env.local" | xargs -I{} echo {})
+  export $(grep -v '^#' "$PROJECT_ROOT/.env.local" | xargs -I{} echo {})
 fi
 
 PORT="${PORT:-3333}"
@@ -42,7 +43,7 @@ pass() { echo -e "${GREEN}✔ $*${NC}"; }
 if lsof -Pi :"$PORT" -sTCP:LISTEN -t >/dev/null 2>&1; then
   pass "Gateway listening on ${PORT}"
 else
-  fail "Gateway not listening on ${PORT}. Start it with ./start-mcp-dev-tools.sh or PORT=${PORT} ./start-http.sh --port ${PORT}"
+  fail "Gateway not listening on ${PORT}. Start it with ./scripts/server/start-mcp-dev-tools.sh or PORT=${PORT} ./scripts/server/start-http.sh --port ${PORT}"
 fi
 
 # 2) Open SSE and capture sessionId
