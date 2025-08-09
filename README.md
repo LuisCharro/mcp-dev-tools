@@ -1,6 +1,10 @@
 # 🤖 MCP Dev Tools - Your AI Pair Programmer
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE) [![Node.js >=18](https://img.shields.io/badge/node-%3E%3D18-blue.svg)](package.json)
+
 This folder contains everything needed to enable AI assistants (ChatGPT, Claude, and others) to code alongside you, with full read access and safe write capabilities to your repositories.
+
+> Prerequisites: macOS, Node.js 18+, Git, ripgrep (rg) for search, and the HTTP proxy (supergateway) installed via npm (provided in package.json).
 
 ## 🎯 Purpose
 
@@ -19,8 +23,9 @@ mcp-dev-tools/
 │   └── run-filesystem.sh  # Script to start filesystem server
 ├── git-pr-mcp/           # Safe write support via PR workflow
 ├── start-http.sh         # Main HTTP proxy launcher (port 3333)
-├── start-search.sh       # Ripgrep search server
-├── start-git-http.sh     # Git operations server
+├── start-search.sh       # Ripgrep search server (port 3334)
+├── start-all.sh          # One-liner launcher for multiple servers
+<!-- (Git operations server coming soon) -->
 ├── package.json          # Node.js dependencies
 └── node_modules/         # Installed npm packages
 ```
@@ -52,7 +57,13 @@ REPO_ROOT=/path/to/your/repo ./start-http.sh &
 ```
 
 **Option 2 - Edit Configuration:**
-Edit `repo-reader/run-filesystem.sh` and change the `REPO_ROOT` default value.
+Edit `run-filesystem.sh` and change the `REPO_ROOT` default value.
+
+Tip: We also support a local `.env` file in this folder. Quick setup:
+```bash
+cp .env.example .env
+# then edit .env to set REPO_ROOT and ports
+```
 
 ## 💡 Available Features
 
@@ -64,7 +75,7 @@ Edit `repo-reader/run-filesystem.sh` and change the `REPO_ROOT` default value.
 
 ### 2. **Search Capabilities** (Optional)
 ```bash
-./start-search-daemon.sh start  # Start ripgrep search server
+./start-search.sh &  # Start ripgrep search server on port 3334
 ```
 - Fast code search using ripgrep
 - Find patterns across your codebase
@@ -84,12 +95,15 @@ The `git-pr-mcp/` folder contains a two-step confirmation system for making chan
 2. You review and confirm before any changes are applied
 3. Changes are made via Pull Requests, never directly to main branch
 
+Design note: Edits happen on a new branch, a unified diff is shown with a dry-run confirmation hash → on confirm we commit, push, and open a PR.
+
 ## 📊 Server Status
 
 Check if everything is running:
 ```bash
 # Check main server
-curl http://127.0.0.1:3333/sse
+# Note: /sse is a streaming endpoint — continuous output is expected and means it's alive.
+curl -I http://127.0.0.1:3333/sse  # or curl http://127.0.0.1:3333/sse and expect streaming
 
 # Check processes
 ps aux | grep -E "(supergateway|filesystem)"
@@ -106,6 +120,11 @@ pkill -f "supergateway.*3333"
 
 # Stop all MCP servers
 pkill -f supergateway
+
+# Tip: If you started processes in the background (&) and pkill doesn't catch them,
+# find them with ps and kill by PID:
+ps aux | grep supergateway
+kill -9 <PID>
 ```
 
 ## 🔐 Security
@@ -155,7 +174,14 @@ REPO_ROOT=/path/to/project2 ./start-http.sh --port 3334
 ```
 
 ### Custom File Filters
-Edit `repo-reader/run-filesystem.sh` to modify allowed file patterns.
+Edit `run-filesystem.sh` to modify allowed file patterns.
+
+By default we start the filesystem server with safe flags:
+- --read-only
+- --deny-symlinks
+- --allow-globs "**/*.cs" "**/*.ts" "**/*.tsx" "**/*.js" "**/*.json" "**/*.md" "**/*.yml" "**/*.yaml" "**/*.sql"
+
+You can tweak these in `run-filesystem.sh`.
 
 ## 🤝 Working with ChatGPT
 
@@ -184,3 +210,45 @@ Edit `repo-reader/run-filesystem.sh` to modify allowed file patterns.
 **Default Repository**: `/Users/luis/Repos/PDFExtractorAI`
 **Server Port**: 3333
 **Protocol**: HTTP/SSE via MCP
+
+## 🧩 Using with Claude Desktop (macOS)
+
+Claude Desktop reads an MCP config at `~/claude_desktop_config.json`.
+
+Create or edit that file:
+
+```json
+{
+	"mcpServers": {
+		"repo-reader": {
+			"transport": "http",
+			"url": "http://127.0.0.1:3333/"
+		},
+		"repo-search": {
+			"transport": "http",
+			"url": "http://127.0.0.1:3334/"
+		},
+		"repo-git": {
+			"transport": "http",
+			"url": "http://127.0.0.1:3335/"
+		}
+	}
+}
+```
+
+If HTTP transport isn’t available in your Claude build, switch to stdio:
+
+```json
+{
+	"mcpServers": {
+		"repo-reader": {
+			"command": "/Users/luis/mcpServers/mcp-dev-tools/start-http.sh"
+		}
+	}
+}
+```
+
+Then quit and reopen Claude Desktop. In a chat, ask:
+
+- “What MCP tools are available?”
+- “List files in /src.”
