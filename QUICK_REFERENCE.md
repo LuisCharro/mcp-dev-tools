@@ -89,12 +89,12 @@ echo $PATH
 which node
 
 # Ensure MCP reference servers exist (filesystem MCP)
-ls -la /Users/luis/mcpServers/mcp-reference-servers/src/filesystem/dist/index.js
+ls -la $HOME/mcpServers/mcp-reference-servers/src/filesystem/dist/index.js
 ```
 
 ### Missing Dependencies (reference servers)
 ```bash
-cd /Users/luis/mcpServers/mcp-reference-servers
+cd $HOME/mcpServers/mcp-reference-servers
 npm ci
 npm run build
 ```
@@ -102,7 +102,7 @@ npm run build
 ## 🔄 Updating Reference Servers
 
 ```bash
-cd /Users/luis/mcpServers/mcp-reference-servers && git pull && npm ci && npm run build
+cd $HOME/mcpServers/mcp-reference-servers && git pull && npm ci && npm run build
 ```
 
 ## 🧹 Maintenance
@@ -112,7 +112,7 @@ cd /Users/luis/mcpServers/mcp-reference-servers && git pull && npm ci && npm run
 npm cache clean --force
 
 # Check disk space
-df -h /Users/luis/mcpServers
+df -h $HOME/mcpServers
 
 # Archive old logs
 mkdir -p logs/archive
@@ -131,8 +131,8 @@ pkill -f 'supergateway.*3333' && ./start-http.sh --port 3333 &> mcp-gateway.log 
 
 ## 📁 Important Paths
 
-- MCP Servers Root: `/Users/luis/mcpServers`
-- MCP Reference: `/Users/luis/mcpServers/mcp-reference-servers`
+- MCP Servers Root: `$HOME/mcpServers`
+- MCP Reference: `$HOME/mcpServers/mcp-reference-servers`
 - Default Repo: `<your-repo-path>` (configure in .env)
 - Logs: `mcp-gateway.log`, `mcp-search.log`
 - Start scripts: `./start-mcp-dev-tools.sh`, `./start-http.sh`, `./start-search.sh`
@@ -150,4 +150,4 @@ lsof -ti:3333,3334 | xargs kill -9
 ---
 For detailed troubleshooting, see `TROUBLESHOOTING.md`.
 Run `./health-check.sh` for diagnostics.
-- **MCP Servers Root:** `/Users/luis/mcpServers`
+- **MCP Servers Root:** `$HOME/mcpServers`

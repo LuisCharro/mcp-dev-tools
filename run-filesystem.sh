@@ -17,7 +17,8 @@ if [ -z "$REPO_ROOT" ]; then
 	echo "REPO_ROOT is not set. Please set it in .env or environment."
 	exit 1
 fi
-MCP_REF_DIR="/Users/luis/mcpServers/mcp-reference-servers"
+# Allow override of reference servers path; default under HOME
+MCP_REF_DIR="${MCP_REF_DIR:-$HOME/mcpServers/mcp-reference-servers}"
 
 # Safety defaults: read-only, deny symlinks, allow common code/doc types
 ALLOW_GLOBS=("**/*.cs" "**/*.ts" "**/*.tsx" "**/*.js" "**/*.jsx" "**/*.json" "**/*.md" "**/*.yml" "**/*.yaml" "**/*.sql")

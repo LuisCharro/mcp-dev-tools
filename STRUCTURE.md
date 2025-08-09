@@ -28,7 +28,7 @@ mcp-dev-tools/
 
 Notes:
 - There is no `filesystem-core/` or `mcp-ref/` folder inside this repo. The filesystem MCP server is sourced from your local MCP reference servers installation.
-- `run-filesystem.sh` uses `MCP_REF_DIR` (default `/Users/luis/mcpServers/mcp-reference-servers`) and runs `src/filesystem/dist/index.js` from there.
+- `run-filesystem.sh` uses `MCP_REF_DIR` (default `$HOME/mcpServers/mcp-reference-servers`) and runs `src/filesystem/dist/index.js` from there.
 
 ## How It Works
 
@@ -65,7 +65,7 @@ REPO_ROOT=/path/to/your/project ./start-mcp-dev-tools.sh
 ## External Dependency: Reference Servers
 
 This repository relies on the local MCP reference servers for the filesystem MCP:
-- Default path: `/Users/luis/mcpServers/mcp-reference-servers`
+- Default path: `$HOME/mcpServers/mcp-reference-servers`
 - Expected entry: `src/filesystem/dist/index.js`
 
 If your installation lives elsewhere, edit `MCP_REF_DIR` in `run-filesystem.sh`.

@@ -17,9 +17,9 @@
 - Changed references from "ChatGPT Desktop" to "AI assistants"
 
 ### 4. **Directory Structure**
-- Original location: `/Users/luis/mcpServers/chatgpt-coder-mcp`
-- Renamed to: `/Users/luis/mcpServers/mcp-dev-tools`
-- Copied to: `/Users/luis/Repos/mcp-dev-tools`
+- Original location: `$HOME/mcpServers/chatgpt-coder-mcp`
+- Renamed to: `$HOME/mcpServers/mcp-dev-tools`
+- Copied to: `/path/to/mcp-dev-tools`
 
 ### 5. **Compatibility**
 The server remains fully compatible with:

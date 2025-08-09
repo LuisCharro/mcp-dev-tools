@@ -4,8 +4,9 @@ echo "Testing MCP server in stdio mode for Claude Desktop..."
 echo "======================================================="
 echo ""
 
+THIS_DIR="$(cd "$(dirname "$0")" && pwd)"
 # Test if the script is executable
-if [ -x "/Users/luis/Repos/mcp-dev-tools/run-filesystem.sh" ]; then
+if [ -x "$THIS_DIR/run-filesystem.sh" ]; then
     echo "✅ run-filesystem.sh is executable"
 else
     echo "❌ run-filesystem.sh is NOT executable"
@@ -13,7 +14,7 @@ else
 fi
 
 # Check if MCP reference server exists
-if [ -d "/Users/luis/mcpServers/mcp-reference-servers" ]; then
+if [ -d "$HOME/mcpServers/mcp-reference-servers" ]; then
     echo "✅ MCP reference servers directory exists"
 else
     echo "❌ MCP reference servers directory NOT found"
@@ -21,7 +22,7 @@ else
 fi
 
 # Check if the filesystem index.js exists
-if [ -f "/Users/luis/mcpServers/mcp-reference-servers/src/filesystem/dist/index.js" ]; then
+if [ -f "$HOME/mcpServers/mcp-reference-servers/src/filesystem/dist/index.js" ]; then
     echo "✅ Filesystem MCP server binary exists"
 else
     echo "❌ Filesystem MCP server binary NOT found"
@@ -35,7 +36,7 @@ echo "✅ REPO_ROOT set to: $REPO_ROOT"
 # Test the script with a simple MCP initialize message
 echo ""
 echo "Testing MCP initialization..."
-echo '{"jsonrpc":"2.0","method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"test","version":"1.0.0"}},"id":1}' | /Users/luis/Repos/mcp-dev-tools/run-filesystem.sh 2>/dev/null | head -1 | jq -r '.result' > /dev/null 2>&1
+echo '{"jsonrpc":"2.0","method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"test","version":"1.0.0"}},"id":1}' | "$THIS_DIR/run-filesystem.sh" 2>/dev/null | head -1 | jq -r '.result' > /dev/null 2>&1
 
 if [ $? -eq 0 ]; then
     echo "✅ MCP server responds correctly to stdio input"

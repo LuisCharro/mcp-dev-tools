@@ -65,26 +65,27 @@ else
 fi
 echo ""
 
-# Check if project directory exists
 echo "4. Checking project directories..."
-if [ -d "/Users/luis/mcpServers/mcp-reference-servers" ]; then
-    echo -e "${GREEN}\u2713${NC} mcp-reference-servers directory exists"
+# Allow override of reference servers root
+MCP_REF_DIR_CHECK=${MCP_REF_DIR:-$HOME/mcpServers/mcp-reference-servers}
+if [ -d "$MCP_REF_DIR_CHECK" ]; then
+    echo -e "${GREEN}\u2713${NC} mcp-reference-servers directory exists at $MCP_REF_DIR_CHECK"
     
     # Check if node_modules exists
-    if [ -d "/Users/luis/mcpServers/mcp-reference-servers/node_modules" ]; then
+    if [ -d "$MCP_REF_DIR_CHECK/node_modules" ]; then
         echo -e "${GREEN}\u2713${NC} node_modules installed"
     else
         echo -e "${YELLOW}\u26a0${NC} node_modules not found - run 'npm ci' in mcp-reference-servers directory"
     fi
     
     # Check if built
-    if [ -d "/Users/luis/mcpServers/mcp-reference-servers/src/filesystem/dist" ]; then
+    if [ -d "$MCP_REF_DIR_CHECK/src/filesystem/dist" ]; then
         echo -e "${GREEN}\u2713${NC} Filesystem server build exists"
     else
         echo -e "${YELLOW}\u26a0${NC} Build directory not found - run 'npm run build' in mcp-reference-servers directory"
     fi
 else
-    echo -e "${RED}\u2717${NC} mcp-reference-servers directory not found at /Users/luis/mcpServers/mcp-reference-servers"
+    echo -e "${RED}\u2717${NC} mcp-reference-servers directory not found at $MCP_REF_DIR_CHECK"
 fi
 echo ""
 
@@ -119,7 +120,7 @@ echo ""
 
 # Check disk space
 echo "6. Checking disk space..."
-DISK_USAGE=$(df -h /Users/luis/mcpServers 2>/dev/null | tail -1 | awk '{print $5}' | sed 's/%//')
+DISK_USAGE=$(df -h "$HOME/mcpServers" 2>/dev/null | tail -1 | awk '{print $5}' | sed 's/%//')
 if [ -n "$DISK_USAGE" ]; then
     if [ "$DISK_USAGE" -lt 80 ]; then
         echo -e "${GREEN}\u2713${NC} Disk usage: ${DISK_USAGE}%"
@@ -150,8 +151,8 @@ if ! pgrep -f "supergateway" > /dev/null; then
     ((ISSUES++))
 fi
 
-if [ ! -d "/Users/luis/mcpServers/mcp-reference-servers/node_modules" ]; then
-    echo "• Install dependencies: cd /Users/luis/mcpServers/mcp-reference-servers && npm ci && npm run build"
+if [ ! -d "$MCP_REF_DIR_CHECK/node_modules" ]; then
+    echo "• Install dependencies: cd $MCP_REF_DIR_CHECK && npm ci && npm run build"
     ((ISSUES++))
 fi
 

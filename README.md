@@ -37,14 +37,14 @@ mcp-dev-tools/
 ```
 
 Notes:
-- The stdio filesystem server is provided by the MCP reference servers on your machine. The path is configured in `run-filesystem.sh` via `MCP_REF_DIR` (defaults to `/Users/luis/mcpServers/mcp-reference-servers`). Adjust if your path differs.
+- The stdio filesystem server is provided by the MCP reference servers on your machine. The path is configured in `run-filesystem.sh` via `MCP_REF_DIR` (defaults to `$HOME/mcpServers/mcp-reference-servers`). Adjust if your path differs.
 - No `repo-reader/`, `git-pr-mcp/`, or Git HTTP server exists in this repo today.
 
 ## 🚀 Quick Start
 
 ### 1) Start the main server (HTTP)
 ```bash
-cd /Users/luis/Repos/mcp-dev-tools
+cd /path/to/mcp-dev-tools
 ./start-mcp-dev-tools.sh
 ```
 - Default port: 3333
@@ -235,7 +235,7 @@ HTTP transport (recommended):
 ```json
 {
   "mcpServers": {
-    "repo-reader": {
+  "mcp-dev-tools": {
       "transport": "http",
       "url": "http://127.0.0.1:3333/"
     },
@@ -251,8 +251,8 @@ If HTTP transport isn’t available in your Claude build, use stdio with the fil
 ```json
 {
   "mcpServers": {
-    "repo-reader": {
-      "command": "/Users/luis/Repos/mcp-dev-tools/run-filesystem.sh",
+    "mcp-dev-tools": {
+      "command": "/absolute/path/to/mcp-dev-tools/run-filesystem.sh",
       "args": []
     }
   }
@@ -266,7 +266,7 @@ Then quit and reopen Claude Desktop. In a chat, ask:
 ## 📎 Reference Servers Note
 
 This repo calls into the local MCP reference servers for the filesystem MCP:
-- Default path: `/Users/luis/mcpServers/mcp-reference-servers`
+- Default path: `$HOME/mcpServers/mcp-reference-servers`
 - Expected binary: `src/filesystem/dist/index.js`
 
 If your path differs, edit `MCP_REF_DIR` in `run-filesystem.sh`. Ensure the reference servers are built so that the `dist` file exists.

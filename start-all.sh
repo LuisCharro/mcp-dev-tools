@@ -28,7 +28,7 @@ sleep 2
 
 echo ""
 echo "✅ Started servers:"
-echo "  - repo-reader:   http://127.0.0.1:$REPO_PORT/    (PID $FS_PID)"
+echo "  - mcp-dev-tools: http://127.0.0.1:$REPO_PORT/    (PID $FS_PID)"
 echo "  - repo-search:   http://127.0.0.1:$SEARCH_PORT/  (PID $SEARCH_PID)"
 echo "  - repo-git:      http://127.0.0.1:$GIT_PORT/     (coming soon)"
 echo ""

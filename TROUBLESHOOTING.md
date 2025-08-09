@@ -34,7 +34,7 @@ lsof -i :3334  # Check port 3334 (search)
 
 3. **Ensure MCP reference servers are installed/built:**
    ```bash
-   cd /Users/luis/mcpServers/mcp-reference-servers
+   cd $HOME/mcpServers/mcp-reference-servers
    npm ci && npm run build
    ```
 
@@ -65,7 +65,7 @@ tail -f mcp-search.log
 
 **Keep your MCP reference servers up to date:**
 ```bash
-cd /Users/luis/mcpServers/mcp-reference-servers
+cd $HOME/mcpServers/mcp-reference-servers
 git pull
 npm ci
 npm run build
@@ -77,7 +77,7 @@ npm run build
 pkill -f supergateway
 
 # Update and rebuild
-cd /Users/luis/mcpServers/mcp-reference-servers
+cd $HOME/mcpServers/mcp-reference-servers
 git pull origin main
 npm ci
 npm run build
@@ -118,7 +118,7 @@ npm run build
 
 1. **Weekly Updates:**
    ```bash
-   cd /Users/luis/mcpServers/mcp-ref
+   cd $HOME/mcpServers/mcp-ref
    git pull && npm ci && npm run build
    ```
 
@@ -129,16 +129,16 @@ npm run build
 
 3. **Check disk space:**
    ```bash
-   df -h /Users/luis/mcpServers
+   df -h $HOME/mcpServers
    ```
 
 4. **Archive old logs:**
    ```bash
    # Create logs directory if it doesn't exist
-   mkdir -p /Users/luis/mcpServers/logs/archive
+   mkdir -p $HOME/mcpServers/logs/archive
    
    # Move old logs with timestamp
-   mv dev.log /Users/luis/mcpServers/logs/archive/dev-$(date +%Y%m%d).log
+   mv dev.log $HOME/mcpServers/logs/archive/dev-$(date +%Y%m%d).log
    ```
 
 ### Health Checks
@@ -206,7 +206,7 @@ tail -f stdio.log
 pkill -f supergateway
 
 # Update reference servers
-cd /Users/luis/mcpServers/mcp-reference-servers && git pull && npm ci && npm run build
+cd $HOME/mcpServers/mcp-reference-servers && git pull && npm ci && npm run build
 
 # Check status
 ps aux | grep supergateway
