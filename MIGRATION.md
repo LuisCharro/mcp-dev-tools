@@ -9,7 +9,7 @@
 
 ### 2. **Files Renamed**
 - `start-chatgpt-coder.sh` → `start-mcp-dev-tools.sh`
-- Log file: `chatgpt-coder.log` → `mcp-dev-tools.log`
+- Log file: `chatgpt-coder.log` → `mcp-gateway.log`
 
 ### 3. **Documentation Updated**
 - Updated `README.md` to reflect new name and broader compatibility

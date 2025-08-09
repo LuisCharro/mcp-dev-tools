@@ -5,17 +5,14 @@
 ### 1. Port Already in Use
 **Problem:** Error message indicating port is already in use when starting servers.
 
-**Solution:** Change the port flags in your startup commands:
+**Solution:** Change the port when starting:
 ```bash
-# For HTTP server (default port 3000)
-./start-http.sh --port 3001
-
-# For stdio-proxy server (default port 5173)
-./start-stdio.sh --port 5174
+# For HTTP server (default port 3333)
+PORT=3334 ./start-mcp-dev-tools.sh
 
 # Or check what's using the port
-lsof -i :3000  # Check port 3000
-lsof -i :5173  # Check port 5173
+lsof -i :3333  # Check port 3333
+lsof -i :3334  # Check port 3334 (search)
 ```
 
 ### 2. "Command not found" Errors
@@ -35,10 +32,10 @@ lsof -i :5173  # Check port 5173
    which npm
    ```
 
-3. **Reinstall dependencies in mcp-ref:**
+3. **Ensure MCP reference servers are installed/built:**
    ```bash
-   cd /Users/luis/mcpServers/mcp-ref
-   npm ci
+   cd /Users/luis/mcpServers/mcp-reference-servers
+   npm ci && npm run build
    ```
 
 ### 3. Logging and Debugging
@@ -46,10 +43,10 @@ lsof -i :5173  # Check port 5173
 **Redirect logs to a file for easier debugging:**
 ```bash
 # Start server with logs redirected to file
-./start-http.sh &> dev.log
+./start-http.sh &> mcp-gateway.log
 
 # Monitor logs in real-time
-tail -f dev.log
+tail -f mcp-gateway.log
 
 # View last 50 lines of logs
 tail -n 50 dev.log
@@ -58,17 +55,17 @@ tail -n 50 dev.log
 grep -i error dev.log
 ```
 
-**For stdio-proxy server:**
+**For search server:**
 ```bash
-./start-stdio.sh &> stdio.log
-tail -f stdio.log
+./start-search.sh &> mcp-search.log
+tail -f mcp-search.log
 ```
 
 ### 4. Updating Reference Servers
 
 **Keep your MCP reference servers up to date:**
 ```bash
-cd /Users/luis/mcpServers/mcp-ref
+cd /Users/luis/mcpServers/mcp-reference-servers
 git pull
 npm ci
 npm run build
@@ -77,18 +74,17 @@ npm run build
 **Full update sequence:**
 ```bash
 # Stop running servers first
-pkill -f mcp-stdio-proxy
-pkill -f mcp-http-server
+pkill -f supergateway
 
 # Update and rebuild
-cd /Users/luis/mcpServers/mcp-ref
+cd /Users/luis/mcpServers/mcp-reference-servers
 git pull origin main
 npm ci
 npm run build
 
 # Restart servers
-./start-http.sh &> dev.log &
-./start-stdio.sh &> stdio.log &
+./start-http.sh --port 3333 &> mcp-gateway.log &
+./start-search.sh &> mcp-search.log &
 ```
 
 ### 5. Stopping Servers
@@ -99,17 +95,16 @@ npm run build
 
 2. **Kill by process name:**
    ```bash
-   pkill -f mcp-stdio-proxy
-   pkill -f mcp-http-server
+   pkill -f supergateway
    ```
 
 3. **Find and kill by port:**
    ```bash
-   # Find process using port 3000
-   lsof -ti:3000 | xargs kill
+   # Find process using port 3333
+   lsof -ti:3333 | xargs kill
    
-   # Find process using port 5173
-   lsof -ti:5173 | xargs kill
+   # Find process using port 3334 (search)
+   lsof -ti:3334 | xargs kill
    ```
 
 4. **View all running MCP processes:**
@@ -154,29 +149,24 @@ npm run build
 echo "Checking MCP server status..."
 
 # Check if servers are running
-if pgrep -f "mcp-http-server" > /dev/null; then
-    echo "✓ HTTP server is running"
+if pgrep -f "supergateway" > /dev/null; then
+   echo "✓ HTTP gateway is running"
 else
-    echo "✗ HTTP server is not running"
+   echo "✗ HTTP gateway is not running"
 fi
 
-if pgrep -f "mcp-stdio-proxy" > /dev/null; then
-    echo "✓ STDIO proxy is running"
-else
-    echo "✗ STDIO proxy is not running"
-fi
 
 # Check ports
-if lsof -Pi :3000 -sTCP:LISTEN -t >/dev/null ; then
-    echo "✓ Port 3000 is listening"
+if lsof -Pi :3333 -sTCP:LISTEN -t >/dev/null ; then
+   echo "✓ Port 3333 is listening"
 else
-    echo "✗ Port 3000 is not listening"
+   echo "✗ Port 3333 is not listening"
 fi
 
-if lsof -Pi :5173 -sTCP:LISTEN -t >/dev/null ; then
-    echo "✓ Port 5173 is listening"
+if lsof -Pi :3334 -sTCP:LISTEN -t >/dev/null ; then
+   echo "✓ Port 3334 is listening"
 else
-    echo "✗ Port 5173 is not listening"
+   echo "✗ Port 3334 is not listening"
 fi
 ```
 
@@ -184,10 +174,10 @@ fi
 
 **Set custom environment variables for servers:**
 ```bash
-# In your .bashrc or .zshrc
-export MCP_HTTP_PORT=3000
-export MCP_STDIO_PORT=5173
-export MCP_LOG_LEVEL=debug
+# In your .zshrc
+export PORT=3333
+export SEARCH_PORT=3334
+export REPO_ROOT=/absolute/path/to/your/repository
 ```
 
 ### Troubleshooting Checklist
@@ -205,24 +195,23 @@ export MCP_LOG_LEVEL=debug
 
 ```bash
 # Start servers
-./start-http.sh &> dev.log &
-./start-stdio.sh &> stdio.log &
+./start-http.sh --port 3333 &> mcp-gateway.log &
+./start-search.sh &> mcp-search.log &
 
 # Monitor logs
 tail -f dev.log
 tail -f stdio.log
 
 # Stop servers
-pkill -f mcp-stdio-proxy
-pkill -f mcp-http-server
+pkill -f supergateway
 
-# Update servers
-cd /Users/luis/mcpServers/mcp-ref && git pull && npm ci && npm run build
+# Update reference servers
+cd /Users/luis/mcpServers/mcp-reference-servers && git pull && npm ci && npm run build
 
 # Check status
-ps aux | grep mcp
-lsof -i :3000
-lsof -i :5173
+ps aux | grep supergateway
+lsof -i :3333
+lsof -i :3334
 ```
 
 ## Need More Help?

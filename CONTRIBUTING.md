@@ -30,8 +30,11 @@ cd mcp-dev-tools
 # Install dependencies
 npm install
 
-# Test the server
+# Test the server (default repo and port)
 ./start-mcp-dev-tools.sh
+
+# Or with a custom repo/port
+REPO_ROOT=/path/to/repo PORT=3334 ./start-mcp-dev-tools.sh
 ```
 
 ### Code Style
