@@ -1,17 +1,23 @@
 {
   "name": "mcpservers",
   "version": "1.0.0",
-  "description": "",
+  "description": "Local MCP dev tools: filesystem over stdio + HTTP proxy (supergateway) and optional ripgrep search.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"No tests yet\"",
+    "start": "./start-http.sh",
+    "start:all": "./start-all.sh",
+    "start:search": "./start-search.sh"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Luis Charro",
+  "license": "MIT",
   "type": "commonjs",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
-    "mcp-proxy": "^5.5.1",
+    "mcp-proxy": "^5.5.3",
     "mcp-ripgrep": "^0.4.0",
     "supergateway": "^3.4.0"
   }
