@@ -7,16 +7,16 @@
 ./start-mcp-dev-tools.sh
 
 # Start HTTP gateway only (wraps stdio filesystem MCP)
-./start-http.sh --port 3333 &> mcp-gateway.log &
+./scripts/server/start-http.sh --port 3333 &> mcp-gateway.log &
 
 # Start search server (ripgrep) on 3334
-./start-search.sh &> mcp-search.log &
+./scripts/server/start-search.sh &> mcp-search.log &
 ```
 
 Custom ports:
 ```bash
 PORT=3334 ./start-mcp-dev-tools.sh
-SEARCH_PORT=4444 ./start-search.sh
+SEARCH_PORT=4444 ./scripts/server/start-search.sh
 ```
 
 ## 🛑 Stopping Servers
@@ -36,7 +36,7 @@ lsof -ti:3334 | xargs kill  # Kill process on port 3334
 
 ```bash
 # Health/diagnostics
-./health-check.sh
+./scripts/health/health-check.sh
 
 # Check running processes
 ps aux | grep supergateway
@@ -123,10 +123,10 @@ mv mcp-gateway.log logs/archive/mcp-gateway-$(date +%Y%m%d).log
 
 ```bash
 # Restart main HTTP server on 3333
-pkill -f 'supergateway.*3333' && ./start-http.sh --port 3333 &> mcp-gateway.log &
+pkill -f 'supergateway.*3333' && ./scripts/server/start-http.sh --port 3333 &> mcp-gateway.log &
 
 # Check everything
-./health-check.sh
+./scripts/health/health-check.sh
 ```
 
 ## 📁 Important Paths
@@ -135,7 +135,7 @@ pkill -f 'supergateway.*3333' && ./start-http.sh --port 3333 &> mcp-gateway.log 
 - MCP Reference: `$HOME/mcpServers/mcp-reference-servers`
 - Default Repo: `<your-repo-path>` (configure in .env)
 - Logs: `mcp-gateway.log`, `mcp-search.log`
-- Start scripts: `./start-mcp-dev-tools.sh`, `./start-http.sh`, `./start-search.sh`
+- Start scripts: `./start-mcp-dev-tools.sh`, `./scripts/server/start-http.sh`, `./scripts/server/start-search.sh`
 
 ## ⚡ Emergency Commands
 
@@ -148,6 +148,6 @@ lsof -ti:3333,3334 | xargs kill -9
 ```
 
 ---
-For detailed troubleshooting, see `TROUBLESHOOTING.md`.
-Run `./health-check.sh` for diagnostics.
+For detailed troubleshooting, see `docs/TROUBLESHOOTING.md`.
+Run `./scripts/health/health-check.sh` for diagnostics.
 - **MCP Servers Root:** `$HOME/mcpServers`

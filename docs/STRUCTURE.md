@@ -8,22 +8,39 @@
 
 ```
 mcp-dev-tools/
-├── start-mcp-dev-tools.sh   # 🚀 Main launcher (recommended)
-├── start-http.sh            # HTTP/SSE gateway using supergateway (wraps stdio server)
-├── run-filesystem.sh        # Launches filesystem MCP (stdio) via local MCP reference servers
-├── start-search.sh          # Ripgrep search MCP via supergateway (optional)
-├── start-all.sh             # Convenience launcher for multiple servers
-├── health-check.sh          # Diagnostics and environment checks
-├── test-stdio.sh            # Simple stdio smoke test (Claude Desktop)
-├── .env.example             # Sample env file (copy to .env)
-├── package.json             # Node dependencies (supergateway, mcp-ripgrep)
+├── README.md                    # Main documentation
+├── package.json                 # Dependencies for HTTP gateway
 ├── package-lock.json
-├── README.md                # Main documentation
-├── QUICK_REFERENCE.md       # Quick commands
-├── TROUBLESHOOTING.md       # Help when things go wrong
-├── MIGRATION.md
-├── CONTRIBUTING.md
-└── node_modules/
+├── .gitignore
+├── .env.example                 # Environment template
+├── .env.local                   # Your local config (auto-generated)
+├── scripts/                     # All executable scripts
+│   ├── server/                  # Server startup and management
+│   │   ├── start-mcp-dev-tools.sh   # Main launcher
+│   │   ├── start-http.sh            # HTTP gateway server
+│   │   ├── start-search.sh          # Search server
+│   │   ├── start-all.sh             # Start all servers
+│   │   └── run-filesystem.sh        # Filesystem server runner
+│   ├── health/                  # Health checks and diagnostics
+│   │   ├── health-check.sh          # System health verification
+│   │   └── smoke-test.sh            # HTTP/SSE functionality test
+│   ├── dev/                     # Development utilities
+│   │   └── test-stdio.sh            # Direct MCP protocol testing
+│   ├── build/                   # Future: build and deployment scripts
+│   └── README.md                # Scripts documentation
+├── docs/                        # All documentation
+│   ├── QUICK_REFERENCE.md       # Command cheat sheet
+│   ├── TROUBLESHOOTING.md       # Common issues and solutions
+│   ├── STRUCTURE.md             # This file
+│   ├── MIGRATION.md             # Upgrade guide
+│   ├── CONTRIBUTING.md          # Development guide
+│   └── FEATURE_BACKLOG.md       # Planned features
+├── tests/                       # Future: automated test suite
+├── examples/                    # Future: client configurations
+├── logs/                        # Server logs (auto-generated)
+│   └── .gitkeep
+├── start-mcp-dev-tools.sh       # Convenience launcher (→ scripts/server/)
+└── mcp-gateway.log              # Main server log (auto-generated)
 ```
 
 Notes:

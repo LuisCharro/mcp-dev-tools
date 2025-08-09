@@ -43,7 +43,7 @@ lsof -i :3334  # Check port 3334 (search)
 **Redirect logs to a file for easier debugging:**
 ```bash
 # Start server with logs redirected to file
-./start-http.sh &> mcp-gateway.log
+./scripts/server/start-http.sh &> mcp-gateway.log
 
 # Monitor logs in real-time
 tail -f mcp-gateway.log
@@ -57,7 +57,7 @@ grep -i error dev.log
 
 **For search server:**
 ```bash
-./start-search.sh &> mcp-search.log
+./scripts/server/start-search.sh &> mcp-search.log
 tail -f mcp-search.log
 ```
 
@@ -83,8 +83,8 @@ npm ci
 npm run build
 
 # Restart servers
-./start-http.sh --port 3333 &> mcp-gateway.log &
-./start-search.sh &> mcp-search.log &
+./scripts/server/start-http.sh --port 3333 &> mcp-gateway.log &
+./scripts/server/start-search.sh &> mcp-search.log &
 ```
 
 ### 5. Stopping Servers
@@ -195,8 +195,8 @@ export REPO_ROOT=/absolute/path/to/your/repository
 
 ```bash
 # Start servers
-./start-http.sh --port 3333 &> mcp-gateway.log &
-./start-search.sh &> mcp-search.log &
+./scripts/server/start-http.sh --port 3333 &> mcp-gateway.log &
+./scripts/server/start-search.sh &> mcp-search.log &
 
 # Monitor logs
 tail -f dev.log

@@ -33,6 +33,12 @@ npm install
 # Test the server (default repo and port)
 ./start-mcp-dev-tools.sh
 
+# Run health checks
+./scripts/health/health-check.sh
+
+# Run smoke test
+./scripts/health/smoke-test.sh
+
 # Or with a custom repo/port
 REPO_ROOT=/path/to/repo PORT=3334 ./start-mcp-dev-tools.sh
 ```

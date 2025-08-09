@@ -1,63 +1,115 @@
-# Migration from chatgpt-coder-mcp to mcp-dev-tools
+# Migration Guide
 
-## Changes Made
+## Version History and Breaking Changes
 
-### 1. **Name Change**
-- **Old name**: `chatgpt-coder-mcp`
-- **New name**: `mcp-dev-tools`
-- **Reason**: More universal, not tied to a specific AI assistant
+### Current Version → v2.0.0 (Reorganization Update)
 
-### 2. **Files Renamed**
-- `start-chatgpt-coder.sh` → `start-mcp-dev-tools.sh`
-- Log file: `chatgpt-coder.log` → `mcp-gateway.log`
+#### What Changed
+- **📁 Complete folder restructure** - Scripts moved from root to organized subfolders
+- **🔧 Updated all paths** - All script references updated for new structure
+- **📚 Documentation reorganization** - All docs moved to `docs/` folder
+- **🆕 New convenience launcher** - Added root-level launcher for backward compatibility
 
-### 3. **Documentation Updated**
-- Updated `README.md` to reflect new name and broader compatibility
-- Updated `STRUCTURE.md` with new folder and script names
-- Changed references from "ChatGPT Desktop" to "AI assistants"
+#### Migration Steps
 
-### 4. **Directory Structure**
-- Original location: `$HOME/mcpServers/chatgpt-coder-mcp`
-- Renamed to: `$HOME/mcpServers/mcp-dev-tools`
-- Copied to: `/path/to/mcp-dev-tools`
+**If you have existing .env.local or scripts:**
 
-### 5. **Compatibility**
-The server remains fully compatible with:
-- ChatGPT Desktop
-- Claude Desktop
-- Any MCP-compatible AI assistant
+1. **Update any custom scripts** that reference old paths:
+   ```diff
+   - ./start-mcp-dev-tools.sh
+   + ./scripts/server/start-mcp-dev-tools.sh
+   # OR use the new convenience launcher:
+   + ./start-mcp-dev-tools.sh
+   ```
 
-## Testing Performed
+2. **Update documentation references**:
+   ```diff
+   - ./TROUBLESHOOTING.md
+   + ./docs/TROUBLESHOOTING.md
+   ```
 
-✅ Server starts successfully
-✅ HTTP endpoint responds at http://127.0.0.1:3333/
-✅ Process management works (start/stop)
-✅ Logs are created correctly
-✅ Repository access functions properly
+3. **Your .env.local file works unchanged** - no action needed
 
-## Usage
-
-The usage remains the same, just with the new script name:
-
-```bash
-# Start with default repository
-./start-mcp-dev-tools.sh
-
-# Start with custom repository
-REPO_ROOT=/path/to/your/repo ./start-mcp-dev-tools.sh
-
-# Stop the server
-pkill -f 'supergateway.*3333'
+#### New Structure Benefits
+```
+OLD (cluttered root):           NEW (organized):
+├── start-mcp-dev-tools.sh     ├── scripts/server/start-mcp-dev-tools.sh
+├── health-check.sh            ├── scripts/health/health-check.sh
+├── TROUBLESHOOTING.md         ├── docs/TROUBLESHOOTING.md
+├── (14 other files...)        ├── start-mcp-dev-tools.sh (convenience)
+                               └── (clean root)
 ```
 
-## Configuration for AI Assistants
+#### Compatibility
+- ✅ **Configuration files unchanged** - Your `.env.local` still works
+- ✅ **Server URLs unchanged** - Still `http://127.0.0.1:3333/`
+- ✅ **MCP tools unchanged** - Same file operations and search
+- ✅ **Convenience launcher added** - `./start-mcp-dev-tools.sh` still works
+- ⚠️ **Script paths changed** - Use new paths or convenience launcher
 
-Add in your AI assistant's MCP settings:
+---
+
+## General Migration Guidelines
+
+### Before Upgrading
+1. **Stop all servers**:
+   ```bash
+   pkill -f supergateway
+   ```
+
+2. **Backup your configuration**:
+   ```bash
+   cp .env.local .env.local.backup
+   ```
+
+3. **Check current health**:
+   ```bash
+   ./scripts/health/health-check.sh
+   ```
+
+### After Upgrading
+1. **Pull latest changes**:
+   ```bash
+   git pull origin main
+   ```
+
+2. **Update dependencies if needed**:
+   ```bash
+   npm ci
+   ```
+
+3. **Test health**:
+   ```bash
+   ./scripts/health/health-check.sh
+   ./scripts/health/smoke-test.sh
+   ```
+
+4. **Restart servers**:
+   ```bash
+   ./start-mcp-dev-tools.sh
+   ```
+
+### Configuration Migration
+
+#### Environment Variables
+Configuration has remained stable across versions:
+
+```bash
+# .env.local - works across all versions
+REPO_ROOT=/path/to/your/repository
+PORT=3333
+SEARCH_PORT=3334
+MCP_REF_DIR=/custom/path/to/mcp-reference-servers
+```
+
+#### Client Configuration
+AI assistant configuration unchanged:
 - **Name**: MCP Dev Tools
 - **URL**: `http://127.0.0.1:3333/`
 
-## Notes
+### Getting Migration Help
 
-- All functionality remains identical
-- The server is now positioned as a universal development tool
-- Works with any MCP-compatible client, not just ChatGPT
+For additional help:
+- [Troubleshooting Guide](TROUBLESHOOTING.md)
+- [Quick Reference](QUICK_REFERENCE.md)
+- [Architecture Overview](STRUCTURE.md)
