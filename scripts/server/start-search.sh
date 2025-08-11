@@ -13,16 +13,21 @@ if [ -f "$PROJECT_ROOT/.env.local" ]; then
   export $(grep -v '^#' "$PROJECT_ROOT/.env.local" | xargs -I{} echo {})
 fi
 
-PORT="${SEARCH_PORT:-${PORT:-3334}}"
+SEARCH_PORT="${SEARCH_PORT:-3334}"
+MAX_SEARCH_RESULTS="${MAX_SEARCH_RESULTS:-1000}"
 
 # Avoid starting if the port is already in use
-if lsof -Pi :"$PORT" -sTCP:LISTEN -t >/dev/null 2>&1; then
-  echo "Search server already running on port $PORT (or port in use). Skipping start."
+if lsof -Pi :"$SEARCH_PORT" -sTCP:LISTEN -t >/dev/null 2>&1; then
+  echo "⚠️  Search server already running on port $SEARCH_PORT (or port in use). Skipping start."
   exit 0
 fi
 
-echo "Starting ripgrep MCP server (mcp-ripgrep) on http port $PORT via supergateway"
+echo "🔍 Starting MCP Search Server"
+echo "   Port: $SEARCH_PORT"
+echo "   Max Results: $MAX_SEARCH_RESULTS"
+echo "   Repository: ${REPO_ROOT:-'(inherits from environment)'}"
+echo ""
 
 npx supergateway \
   --stdio "npx -y mcp-ripgrep" \
-  --port "$PORT"
+  --port "$SEARCH_PORT"

@@ -18,7 +18,12 @@ if [[ "${1:-}" == "--port" && -n "${2:-}" ]]; then
   PORT="$2"
 fi
 
-echo "Starting supergateway on port $PORT (SSE: /sse, POST: /message)"
+echo "🚀 Starting MCP Dev Tools HTTP Proxy"
+echo "   Port: $PORT"
+echo "   SSE Endpoint: http://localhost:$PORT/sse"
+echo "   POST Endpoint: http://localhost:$PORT/message"
+echo "   Repository: ${REPO_ROOT:-'(not set - will be validated by filesystem server)'}"
+echo ""
 
 npx supergateway \
   --stdio "$THIS_DIR/run-filesystem.sh" \
