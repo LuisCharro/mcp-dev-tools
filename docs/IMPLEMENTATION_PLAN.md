@@ -3,23 +3,43 @@
 ## Overview
 This document provides a dependency-aware implementation plan for mcp-dev-tools, ensuring each phase builds properly on the previous one without rework.
 
+## Progress Tracking Legend
+- ✅ **COMPLETED** - Task is done and working
+- ⏳ **NEXT** - Ready to start (dependencies met)
+- ⭕ **BLOCKED** - Waiting for dependencies
+- 🚧 **IN PROGRESS** - Currently being worked on
+
+## Overall Progress
+**Phase 0**: Foundation & Hygiene
+- ✅ 0.1 Environment Standardization 
+- ⏳ 0.2 Script Portability (ready to start)
+- ⭕ 0.3 Repository Governance (can run in parallel)
+- ⭕ 0.4 Documentation Alignment (waiting for 0.1)
+
+**Phase 1**: Operational Foundation - ⭕ BLOCKED (needs Phase 0)
+**Phase 2**: Git Integration - ⭕ BLOCKED (needs Phase 1)
+**Phase 3**: Enhanced Features - ⭕ BLOCKED (needs Phase 2)
+**Phase 4**: Production Readiness - ⭕ BLOCKED (needs Phase 3)
+**Phase 5**: Advanced Features - ⭕ BLOCKED (needs Phase 4)
+
 ## Current State Assessment
 - ✅ Basic HTTP proxy (supergateway) setup
 - ✅ Filesystem server (read-only) via MCP reference
 - ✅ Ripgrep search server
 - ✅ Basic start scripts
-- ❌ Missing: Git server, write operations, health checks, proper environment handling
+- ✅ Environment standardization (Phase 0.1)
+- ❌ Missing: Git server, write operations, health checks
 
 ## Phase-by-Phase Implementation Plan
 
 ### Phase 0: Foundation & Hygiene (Week 1)
 **Goal**: Create a stable, portable foundation that works everywhere
 
-#### 0.1 Environment Standardization 
+#### ✅ 0.1 Environment Standardization [COMPLETED]
 **Dependencies**: None
 **Files**: `.env.example`, `.env.local`, all start scripts
 **Tasks**:
-1. Add missing environment variables to `.env.example`:
+1. ✅ Add missing environment variables to `.env.example`:
    ```bash
    PORT=3333
    SEARCH_PORT=3334
@@ -31,81 +51,81 @@ This document provides a dependency-aware implementation plan for mcp-dev-tools,
    MCP_REF_DIR=$HOME/mcpServers/mcp-reference-servers
    MAX_FILE_SIZE=1048576
    ```
-2. Update all scripts to read from standardized env vars
-3. Add environment validation at startup
-4. Echo REPO_ROOT and active config at startup
+2. ✅ Update all scripts to read from standardized env vars
+3. ✅ Add environment validation at startup
+4. ✅ Echo REPO_ROOT and active config at startup
 
-**Acceptance**: `./start-mcp-dev-tools.sh` runs with only `.env.local` present
+**Acceptance**: ✅ `./start-mcp-dev-tools.sh` runs with only `.env.local` present
 
-#### 0.2 Script Portability
-**Dependencies**: 0.1 complete
+#### ⏳ 0.2 Script Portability [NEXT]
+**Dependencies**: 0.1 complete ✅
 **Files**: All shell scripts using `sed -i`
 **Tasks**:
-1. Create `scripts/build/patch-env.mjs` for cross-platform env file editing
-2. Replace all `sed -i ''` usage with the Node helper
-3. Test on both macOS and Linux
+1. ⭕ Create `scripts/build/patch-env.mjs` for cross-platform env file editing
+2. ⭕ Replace all `sed -i ''` usage with the Node helper
+3. ⭕ Test on both macOS and Linux
 
 **Acceptance**: All scripts work on macOS and Linux without modification
 
-#### 0.3 Repository Governance 
+#### ⭕ 0.3 Repository Governance 
 **Dependencies**: None (can run in parallel with 0.1-0.2)
 **Files**: `.github/` directory structure
 **Tasks**:
-1. Create `.github/pull_request_template.md` with checklist
-2. Create `.github/ISSUE_TEMPLATE/` with bug_report.md and feature_request.md
-3. Add `CODEOWNERS` file
-4. Add basic `SECURITY.md`
+1. ⭕ Create `.github/pull_request_template.md` with checklist
+2. ⭕ Create `.github/ISSUE_TEMPLATE/` with bug_report.md and feature_request.md
+3. ⭕ Add `CODEOWNERS` file
+4. ⭕ Add basic `SECURITY.md`
 
 **Acceptance**: PR template auto-loads, CODEOWNERS enforces review
 
-#### 0.4 Documentation Alignment
-**Dependencies**: 0.1 complete (need final script paths)
+#### ⭕ 0.4 Documentation Alignment
+**Dependencies**: 0.1 complete ✅ (need final script paths)
 **Files**: `README.md`, all docs in `docs/`
 **Tasks**:
-1. Update `README.md` quick start to match current script structure
-2. Verify all paths in documentation are correct
-3. Ensure troubleshooting covers common env issues
+1. ⭕ Update `README.md` quick start to match current script structure
+2. ⭕ Verify all paths in documentation are correct
+3. ⭕ Ensure troubleshooting covers common env issues
 
 **Acceptance**: Following README gets first-time user to "SSE streaming is alive" in 2 minutes
 
 ### Phase 1: Operational Foundation (Week 2)
 **Goal**: Make the system robust and observable
 
-#### 1.1 Health & Smoke Checks
-**Dependencies**: Phase 0 complete
+#### ⭕ 1.1 Health & Smoke Checks
+**Dependencies**: Phase 0 complete (0.2 ⏳, 0.3 ⭕, 0.4 ⭕)
 **Files**: `scripts/health/health-check.sh`, `scripts/health/smoke-test.sh`
 **Tasks**:
-1. Implement comprehensive health checks:
+1. ⭕ Implement comprehensive health checks:
    - Node.js ≥18 present
    - ripgrep (`rg`) available
    - All required ports free
    - MCP reference servers available
    - SSE endpoints responding
-2. Add actionable error messages and hints
-3. Create smoke test that verifies end-to-end functionality
+2. ⭕ Add actionable error messages and hints
+3. ⭕ Create smoke test that verifies end-to-end functionality
 
 **Acceptance**: Both scripts give green checks on fresh machine with only Node + ripgrep
 
-#### 1.2 Start-All Convenience & Process Management
-**Dependencies**: 1.1 complete (needs health checks)
+#### ⭕ 1.2 Start-All Convenience & Process Management
+**Dependencies**: 1.1 complete ⭕ (needs health checks)
 **Files**: `scripts/server/start-all.sh`
 **Tasks**:
-1. Make start-all idempotent (check if ports in use)
-2. Track PIDs properly
-3. Add stop-all functionality
-4. Implement log rotation or proper appending
-5. Display running services status
+1. ⭕ Make start-all idempotent (check if ports in use)
+2. ⭕ Track PIDs properly
+3. ⭕ Add stop-all functionality
+4. ⭕ Implement log rotation or proper appending
+5. ⭕ Display running services status
 
 **Acceptance**: Repeated invocations don't spawn duplicates; clean shutdown possible
 
-#### 1.3 Configurable Allow/Deny Globs
-**Dependencies**: Phase 0 complete (needs env standardization)
+#### ⭕ 1.3 Configurable Allow/Deny Globs
+**Dependencies**: Phase 0 complete (0.1 ✅, needs env standardization)
 **Files**: `scripts/server/run-filesystem.sh`, documentation
 **Tasks**:
-1. Parse ALLOW_GLOBS and DENY_GLOBS from environment
-2. Pass filters to filesystem server
-3. Echo effective filters at startup
-4. Document glob patterns and security implications
+1. ⭕ Parse ALLOW_GLOBS and DENY_GLOBS from environment
+2. ⭕ Pass filters to filesystem server
+3. ⭕ Echo effective filters at startup
+4. ⭕ Document glob patterns and security implications
 
 **Acceptance**: Changing globs in `.env.local` visibly affects what AI can access
 
