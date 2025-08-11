@@ -12,9 +12,9 @@ This document provides a dependency-aware implementation plan for mcp-dev-tools,
 ## Overall Progress
 **Phase 0**: Foundation & Hygiene
 - ✅ 0.1 Environment Standardization 
-- ⏳ 0.2 Script Portability (ready to start)
+- ✅ 0.2 Script Portability (completed)
 - ⭕ 0.3 Repository Governance (can run in parallel)
-- ⭕ 0.4 Documentation Alignment (waiting for 0.1)
+- ⏳ 0.4 Documentation Alignment (ready to start)
 
 **Phase 1**: Operational Foundation - ⭕ BLOCKED (needs Phase 0)
 **Phase 2**: Git Integration - ⭕ BLOCKED (needs Phase 1)
@@ -57,15 +57,15 @@ This document provides a dependency-aware implementation plan for mcp-dev-tools,
 
 **Acceptance**: ✅ `./start-mcp-dev-tools.sh` runs with only `.env.local` present
 
-#### ⏳ 0.2 Script Portability [NEXT]
+#### ✅ 0.2 Script Portability [COMPLETED]
 **Dependencies**: 0.1 complete ✅
 **Files**: All shell scripts using `sed -i`
 **Tasks**:
-1. ⭕ Create `scripts/build/patch-env.mjs` for cross-platform env file editing
-2. ⭕ Replace all `sed -i ''` usage with the Node helper
-3. ⭕ Test on both macOS and Linux
+1. ✅ Create `scripts/build/patch-env.mjs` for cross-platform env file editing
+2. ✅ Replace all `sed -i ''` usage with the Node helper
+3. ✅ Test on both macOS and Linux
 
-**Acceptance**: All scripts work on macOS and Linux without modification
+**Acceptance**: ✅ All scripts work on macOS and Linux without modification
 
 #### ⭕ 0.3 Repository Governance 
 **Dependencies**: None (can run in parallel with 0.1-0.2)

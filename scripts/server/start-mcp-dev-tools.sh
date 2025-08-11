@@ -42,17 +42,9 @@ if [ -z "${REPO_ROOT:-}" ]; then
     REPO_ROOT="$INPUT_REPO"
     # Persist to .env (create or update)
     if [ -f "$PROJECT_ROOT/.env.local" ]; then
-        if grep -q '^REPO_ROOT=' "$PROJECT_ROOT/.env.local"; then
-            sed -i '' "s#^REPO_ROOT=.*#REPO_ROOT=$REPO_ROOT#" "$PROJECT_ROOT/.env.local"
-        else
-            printf "\nREPO_ROOT=%s\n" "$REPO_ROOT" >> "$PROJECT_ROOT/.env.local"
-        fi
+        node "$PROJECT_ROOT/scripts/build/patch-env.mjs" "$PROJECT_ROOT/.env.local" REPO_ROOT "$REPO_ROOT"
     elif [ -f "$PROJECT_ROOT/.env" ]; then
-        if grep -q '^REPO_ROOT=' "$PROJECT_ROOT/.env"; then
-            sed -i '' "s#^REPO_ROOT=.*#REPO_ROOT=$REPO_ROOT#" "$PROJECT_ROOT/.env"
-        else
-            printf "\nREPO_ROOT=%s\n" "$REPO_ROOT" >> "$PROJECT_ROOT/.env"
-        fi
+        node "$PROJECT_ROOT/scripts/build/patch-env.mjs" "$PROJECT_ROOT/.env" REPO_ROOT "$REPO_ROOT"
     else
         printf "REPO_ROOT=%s\nPORT=%s\n" "$REPO_ROOT" "$PORT" > "$PROJECT_ROOT/.env.local"
     fi

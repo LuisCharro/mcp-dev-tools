@@ -24,10 +24,11 @@ Thumbs.db
 .env.local
 .env.*.local
 
-# Build outputs
+# Build outputs (but not scripts/build/ which contains utilities)
 dist/
-build/
 out/
+**/build/
+!scripts/build/
 
 # Temporary files
 *.tmp
